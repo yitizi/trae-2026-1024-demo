@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>租房大字报</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700;900&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --red: #c0392b;
+  --deep-red: #8b1a1a;
+  --yellow: #f5c518;
+  --cream: #fdf6e3;
+  --dark: #2c1810;
+  --paper: #f5e6c8;
+}
+
+body {
+  font-family: 'Noto Serif SC', 'SimSun', 'STSong', serif;
+  background: var(--cream);
+  background-image: 
+    repeating-linear-gradient(0deg, transparent, transparent 29px, rgba(139, 26, 26, 0.03) 30px),
+    repeating-linear-gradient(90deg, transparent, transparent 29px, rgba(139, 26, 26, 0.03) 30px);
+  color: var(--dark);
+  min-height: 100vh;
+  padding: 0;
+}
+
+/* 顶部大标题 */
+.poster-header {
+  background: var(--deep-red);
+  padding: 40px 20px 30px;
+  text-align: center;
+  position: relative;
+  border-bottom: 8px solid var(--yellow);
+}
+
+.poster-header::before {
+  content: '★ ★ ★ ★ ★';
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px;
+  color: var(--yellow);
+  letter-spacing: 20px;
+}
+
+.poster-header h1 {
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 0.2em;
+  text-shadow: 3px 3px 0 var(--deep-red), 6px 6px 0 rgba(0,0,0,0.2);
+  line-height: 1.2;
+}
+
+.poster-header .subtitle {
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  color: var(--yellow);
+  margin-top: 12px;
+  letter-spacing: 0.5em;
+  font-weight: 700;
+}
+
+/* 主容器 */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+/* 口号区 */
+.slogan {
+  text-align: center;
+  font-size: clamp(1.4rem, 4vw, 2.2rem);
+  font-weight: 900;
+  color: var(--red);
+  margin-bottom: 40px;
+  letter-spacing: 0.1em;
+  position: relative;
+}
+
+.slogan::before, .slogan::after {
+  content: '❝';
+  font-size: 0.8em;
+  opacity: 0.5;
+}
+
+/* 表单区域 - 大字报风格 */
+.form-section {
+  background: var(--paper);
+  border: 4px solid var(--red);
+  padding: 40px 30px;
+  margin-bottom: 40px;
+  position: relative;
+  box-shadow: 6px 6px 0 var(--red);
+}
+
+.form-section::before {
+  content: '【填 表】';
+  position: absolute;
+  top: -20px;
+  left: 30px;
+  background: var(--red);
+  color: #fff;
+  padding: 6px 20px;
+  font-size: 1.1rem;
+  font-weight: 900;
+  letter-spacing: 0.3em;
+}
+
+.form-group {
+  margin-bottom: 30px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--red);
+  margin-bottom: 12px;
+  letter-spacing: 0.1em;
+}
+
+.form-group label .required {
+  font-size: 0.8em;
+  color: var(--yellow);
+  background: var(--deep-red);
+  padding: 2px 8px;
+  margin-left: 8px;
+  border-radius: 2px;
+}
+
+.form-group select,
+.form-group input[type="number"] {
+  width: 100%;
+  padding: 14px 18px;
+  font-size: 1.2rem;
+  font-family: inherit;
+  font-weight: 700;
+  border: 3px solid var(--dark);
+  background: var(--cream);
+  color: var(--dark);
+  appearance: none;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.form-group select:focus,
+.form-group input:focus {
+  outline: none;
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.2);
+}
+
+/* 多选标签 */
+.tag-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tag-btn {
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  font-weight: 900;
+  font-family: inherit;
+  border: 3px solid var(--red);
+  background: var(--cream);
+  color: var(--red);
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.05em;
+}
+
+.tag-btn.selected {
+  background: var(--red);
+  color: #fff;
+  box-shadow: 3px 3px 0 var(--dark);
+  transform: translate(2px, 2px);
+}
+
+.tag-btn:hover {
+  background: rgba(192, 57, 43, 0.1);
+}
+
+.tag-btn.selected:hover {
+  background: var(--deep-red);
+}
+
+/* 提交按钮 */
+.submit-btn {
+  display: block;
+  width: 100%;
+  padding: 20px;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 900;
+  font-family: inherit;
+  letter-spacing: 0.3em;
+  background: var(--red);
+  color: #fff;
+  border: 4px solid var(--deep-red);
+  cursor: pointer;
+  margin-top: 20px;
+  transition: all 0.15s;
+  box-shadow: 5px 5px 0 var(--dark);
+}
+
+.submit-btn:hover {
+  background: var(--deep-red);
+  transform: translate(2px, 2px);
+  box-shadow: 3px 3px 0 var(--dark);
+}
+
+.submit-btn:active {
+  transform: translate(5px, 5px);
+  box-shadow: 0 0 0 var(--dark);
+}
+
+/* 结果区域 */
+.results-section {
+  display: none;
+}
+
+.results-section.active {
+  display: block;
+}
+
+.result-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.result-header h2 {
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  font-weight: 900;
+  color: var(--red);
+  letter-spacing: 0.15em;
+}
+
+.result-header .result-sub {
+  font-size: 1.1rem;
+  color: var(--dark);
+  margin-top: 8px;
+  opacity: 0.7;
+}
+
+/* 推荐卡片 - 大字报风格 */
+.result-card {
+  background: var(--paper);
+  border: 4px solid var(--dark);
+  padding: 30px;
+  margin-bottom: 25px;
+  position: relative;
+  box-shadow: 5px 5px 0 rgba(0,0,0,0.3);
+}
+
+.result-card::before {
+  content: attr(data-rank);
+  position: absolute;
+  top: -15px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 900;
+  background: var(--yellow);
+  color: var(--deep-red);
+  border: 3px solid var(--dark);
+}
+
+.result-card .card-title {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--red);
+  margin-bottom: 15px;
+  letter-spacing: 0.05em;
+}
+
+.result-card .card-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.info-item {
+  background: var(--cream);
+  border: 2px solid var(--red);
+  padding: 10px 14px;
+}
+
+.info-item .info-label {
+  font-size: 0.85rem;
+  color: var(--dark);
+  opacity: 0.6;
+  margin-bottom: 4px;
+}
+
+.info-item .info-value {
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: var(--red);
+}
+
+.result-card .card-slogan {
+  margin-top: 15px;
+  padding: 12px 16px;
+  background: rgba(192, 57, 43, 0.08);
+  border-left: 4px solid var(--red);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--dark);
+  line-height: 1.6;
+}
+
+/* 底部口号 */
+.footer-slogan {
+  text-align: center;
+  padding: 30px 20px 50px;
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  font-weight: 900;
+  color: var(--red);
+  letter-spacing: 0.2em;
+  border-top: 4px solid var(--red);
+  margin-top: 50px;
+  position: relative;
+}
+
+.footer-slogan::after {
+  content: '★';
+  display: block;
+  font-size: 1.5rem;
+  margin-top: 10px;
+  color: var(--yellow);
+}
+
+/* 动画 */
+@keyframes stampIn {
+  0% { transform: scale(2) rotate(-5deg); opacity: 0; }
+  60% { transform: scale(0.9) rotate(2deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.result-card {
+  animation: stampIn 0.4s ease-out forwards;
+}
+
+.result-card:nth-child(2) { animation-delay: 0.1s; }
+.result-card:nth-child(3) { animation-delay: 0.2s; }
+
+/* 响应式 */
+@media (max-width: 600px) {
+  .form-section { padding: 30px 20px; }
+  .result-card { padding: 20px; }
+  .result-card .card-info { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="poster-header">
+  <h1>租 房 大 字 报</h1>
+  <div class="subtitle">—— 找 房 不 迷 路 · 住 房 不 受 气 ——</div>
+</header>
+
+<div class="container">
+  <div class="slogan">劳动人民当家作主，租房也要心中有数！</div>
+
+  <!-- 表单 -->
+  <section class="form-section">
+    <div class="form-group">
+      <label>所在城市 <span class="required">必填</span></label>
+      <select id="city" required>
+        <option value="">—— 先说清楚，你在哪座城闯荡 ——</option>
+        <option value="fuzhou">福州（有福之州）</option>
+        <option value="xiamen">厦门（鹭岛）</option>
+        <option value="hangzhou">杭州（人间天堂）</option>
+        <option value="guangzhou">广州（羊城）</option>
+        <option value="shenzhen">深圳（搞钱之都）</option>
+        <option value="beijing">北京（帝都）</option>
+        <option value="shanghai">上海（魔都）</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>预算范围 <span class="required">必填</span></label>
+      <select id="budget" required>
+        <option value="">—— 请选择（别谦虚）——</option>
+        <option value="1500">1500 元/月 以下（自力更生）</option>
+        <option value="3000">1500 ~ 3000 元/月（艰苦奋斗）</option>
+        <option value="5000">3000 ~ 5000 元/月（安居乐业）</option>
+        <option value="8000">5000 ~ 8000 元/月（中产奋斗）</option>
+        <option value="12000">8000 ~ 12000 元/月（阔气生活）</option>
+        <option value="20000">12000 元以上（大富大贵）</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>居住需求 <span class="required">必填</span></label>
+      <div class="tag-group" id="typeTags">
+        <button class="tag-btn" data-value="studio">单间</button>
+        <button class="tag-btn" data-value="1b1l">一室一厅</button>
+        <button class="tag-btn" data-value="2b1l">两室一厅</button>
+        <button class="tag-btn" data-value="3b2l">三室两厅</button>
+        <button class="tag-btn" data-value="apt">公寓</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>通勤区域</label>
+      <select id="district">
+        <option value="">—— 不限区域（四海为家）——</option>
+        <option value="city_center">市中心（黄金地段）</option>
+        <option value="metro">地铁口（脚踩两城）</option>
+        <option value="suburb">近郊（宁静致远）</option>
+        <option value="university">大学城（书香气）</option>
+        <option value="business">商务区（卷王聚集）</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>特殊要求（可多选）</label>
+      <div class="tag-group" id="extraTags">
+        <button class="tag-btn" data-value="pet">可养宠</button>
+        <button class="tag-btn" data-value="balcony">有阳台</button>
+        <button class="tag-btn" data-value="furnished">拎包入住</button>
+        <button class="tag-btn" data-value="parking">有车位</button>
+        <button class="tag-btn" data-value="elevator">电梯房</button>
+        <button class="tag-btn" data-value="near_subway">地铁5分钟</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>入住时间</label>
+      <input type="number" id="moveDate" min="0" max="6" placeholder="0" 
+             style="width: 200px; display: inline-block;" title="X 个月内入住">
+      <span style="font-weight: 900; color: var(--red); margin-left: 8px;">个月内必须搬进去</span>
+    </div>
+
+    <button class="submit-btn" id="submitBtn">查 房 ！</button>
+  </section>
+
+  <!-- 结果 -->
+  <section class="results-section" id="results">
+    <div class="result-header">
+      <h2 id="resultTitle">—— 查询结果 ——</h2>
+      <div class="result-sub" id="resultSub"></div>
+    </div>
+    <div id="resultCards"></div>
+  </section>
+</div>
+
+<footer class="footer-slogan">
+  房子是租来的，生活不是！
+</footer>
+
+<script>
+// 房源数据：按城市分组，价格对标 2024-2025 真实租赁市场
+const HOUSES = [
+  // ===== 福州（市中心鼓楼/台江单间 1500-2500，大学城 600-1200）=====
+  { city: "fuzhou", name: "三坊七巷旁·安泰中心 602", type: "studio", size: "32㎡", budget: 1800, district: "city_center", extras: ["furnished", "near_subway"], slogan: "出门是三坊七巷，回家是温馨小屋——古厝旁边的现代日子。", floor: "5/7" },
+  { city: "fuzhou", name: "鼓楼·杨桥路老小区 301", type: "studio", size: "28㎡", budget: 1500, district: "city_center", extras: ["furnished"], slogan: "老小区老邻居，菜市场的吆喝声就是闹钟——烟火气拉满。", floor: "3/6" },
+  { city: "fuzhou", name: "台江·金融街万达旁 1211", type: "1b1l", size: "45㎡", budget: 2600, district: "city_center", extras: ["elevator", "furnished", "near_subway"], slogan: "楼下万达，楼上安家——吃穿住行一步到位。", floor: "12/30" },
+  { city: "fuzhou", name: "东街口·贤南公寓 808", type: "1b1l", size: "50㎡", budget: 3000, district: "city_center", extras: ["elevator", "balcony"], slogan: "东街口地铁上盖，逛完三坊七巷步行回家。", floor: "8/9" },
+  { city: "fuzhou", name: "地铁1号线·树兜站旁 402", type: "studio", size: "30㎡", budget: 1600, district: "metro", extras: ["near_subway", "furnished"], slogan: "树兜站 200 米，1 号线直达南北——通勤费一个月省一百五。", floor: "4/7" },
+  { city: "fuzhou", name: "地铁2号线·宁化站公寓 1105", type: "apt", size: "40㎡", budget: 2200, district: "metro", extras: ["near_subway", "elevator", "furnished"], slogan: "双线换乘站旁，全福州任你窜——车轮上的自由。", floor: "11/18" },
+  { city: "fuzhou", name: "金山·橘园洲创意园 Loft", type: "apt", size: "55㎡", budget: 2600, district: "business", extras: ["furnished", "pet"], slogan: "挑高 4.8 米，猫在阁楼跑酷，你在楼下写代码——这就是人生。", floor: "2/5（Loft）" },
+  { city: "fuzhou", name: "万象城旁·融侨锦江 1502", type: "2b1l", size: "89㎡", budget: 5200, district: "business", extras: ["elevator", "parking", "balcony"], slogan: "万象城商圈核心，加班回来楼下就有热汤喝。", floor: "15/33" },
+  { city: "fuzhou", name: "大学城·旗山脚下学生街", type: "studio", size: "25㎡", budget: 900, district: "university", extras: ["furnished"], slogan: "一个月九百，省下的钱够你吃三十顿捞化——穷开心也是开心。", floor: "2/6" },
+  { city: "fuzhou", name: "福大怡山校区旁 306", type: "1b1l", size: "42㎡", budget: 1400, district: "university", extras: ["balcony", "pet"], slogan: "校园书香免费闻，阳台晒被正朝阳。", floor: "3/6" },
+  { city: "fuzhou", name: "仓山·金山生活区七期", type: "2b1l", size: "85㎡", budget: 3200, district: "suburb", extras: ["parking", "elevator"], slogan: "两室一厅三千二，福州的良心价——剩下的钱留着过好日子。", floor: "7/11" },
+  { city: "fuzhou", name: "晋安·鹤林新城 1208", type: "2b1l", size: "78㎡", budget: 2800, district: "suburb", extras: ["elevator", "parking"], slogan: "东二环新城区，小区花园散步遛弯——日子不慌不忙。", floor: "12/26" },
+  { city: "fuzhou", name: "闽江边·江滨大厦 2003", type: "3b2l", size: "135㎡", budget: 7500, district: "city_center", extras: ["elevator", "balcony", "parking", "furnished"], slogan: "二十层看闽江夜景，两万出头就能拿下——在福州这叫顶配。", floor: "20/28" },
+  { city: "fuzhou", name: "五四路·温泉公园旁 902", type: "3b2l", size: "120㎡", budget: 6000, district: "city_center", extras: ["elevator", "parking", "balcony"], slogan: "CBD 旁温泉片区，泡的不是澡，是福州人的讲究。", floor: "9/16" },
+
+  // ===== 厦门（思明单间 1900-2200，岛外 1000-1500）=====
+  { city: "xiamen", name: "思明·厦大南普陀旁 502", type: "studio", size: "30㎡", budget: 2200, district: "city_center", extras: ["furnished", "balcony"], slogan: "推开窗是南普陀的钟声，走两步是厦大的操场——文艺青年标配。", floor: "5/7" },
+  { city: "xiamen", name: "中山路·骑楼老宅 201", type: "studio", size: "26㎡", budget: 1900, district: "city_center", extras: ["furnished"], slogan: "百年骑楼里的新生活，下楼就是中山路的烟火。", floor: "2/4" },
+  { city: "xiamen", name: "莲坂·明发广场公寓 1310", type: "apt", size: "42㎡", budget: 2800, district: "city_center", extras: ["elevator", "near_subway", "furnished"], slogan: "地铁上盖商业圈，白天上班晚上撸串，两不耽误。", floor: "13/28" },
+  { city: "xiamen", name: "地铁1号线·文灶站旁 601", type: "studio", size: "28㎡", budget: 2000, district: "metro", extras: ["near_subway", "furnished"], slogan: "文灶站出站就到家，从岛内这头到那头只要几块钱。", floor: "6/9" },
+  { city: "xiamen", name: "软件园二期·观音山公寓 908", type: "apt", size: "45㎡", budget: 3200, district: "business", extras: ["elevator", "near_subway", "furnished"], slogan: "窗外是观音山商务区，码农的认真生活从这里开始。", floor: "9/22" },
+  { city: "xiamen", name: "湖里·SM广场旁 706", type: "1b1l", size: "48㎡", budget: 2600, district: "business", extras: ["elevator", "parking"], slogan: "SM 城市广场旁，购物吃饭看电影，楼下全能解决。", floor: "7/15" },
+  { city: "xiamen", name: "集美大学城·杏林湾 403", type: "studio", size: "26㎡", budget: 1100, district: "university", extras: ["furnished", "near_subway"], slogan: "一千一住集美，跨过杏林湾就是另一番天地——性价比之王。", floor: "4/12" },
+  { city: "xiamen", name: "集美·龙舟池旁 305", type: "1b1l", size: "45㎡", budget: 1700, district: "university", extras: ["balcony", "pet"], slogan: "嘉庚风建筑旁，端午看龙舟，平时看海——闽南慢生活。", floor: "3/7" },
+  { city: "xiamen", name: "海沧·未来海岸 1102", type: "2b1l", size: "88㎡", budget: 3000, district: "suburb", extras: ["elevator", "parking"], slogan: "海沧湾公园旁，两室三千，面朝大海春暖花开。", floor: "11/18" },
+  { city: "xiamen", name: "翔安·洋唐保障房 806", type: "2b1l", size: "75㎡", budget: 2400, district: "suburb", extras: ["elevator", "balcony"], slogan: "翔安新城安个家，地铁3号线进城也不远。", floor: "8/22" },
+  { city: "xiamen", name: "环岛路·海景房 1602", type: "3b2l", size: "130㎡", budget: 8500, district: "city_center", extras: ["elevator", "balcony", "parking", "furnished"], slogan: "十六层海景，躺在床上看日出——这才是厦门的正确打开方式。", floor: "16/30" },
+  { city: "xiamen", name: "杏林·园博苑旁小院", type: "1b1l", size: "50㎡", budget: 1500, district: "suburb", extras: ["pet", "balcony"], slogan: "园博苑边小院落，种花养猫晒太阳——一千五买来的神仙日子。", floor: "独栋" },
+
+  // ===== 北京（市中心单间 4000+，远郊 1500-1900）=====
+  { city: "beijing", name: "西城·金融街旁平房改造", type: "studio", size: "25㎡", budget: 4200, district: "city_center", extras: ["furnished"], slogan: "金融街旁的胡同小屋，上班十分钟——省下的时间是命。", floor: "1/2" },
+  { city: "beijing", name: "东城·东直门旁 1508", type: "1b1l", size: "55㎡", budget: 7500, district: "city_center", extras: ["elevator", "near_subway", "furnished"], slogan: "二环内东直门，机场快轨直达——出差族的黄金位置。", floor: "15/22" },
+  { city: "beijing", name: "朝阳·国贸旁公寓 2808", type: "apt", size: "48㎡", budget: 8500, district: "business", extras: ["elevator", "near_subway", "furnished"], slogan: "CBD 高层公寓，加班到凌晨打车起步价回家。", floor: "28/33" },
+  { city: "beijing", name: "海淀·中关村黄庄 902", type: "1b1l", size: "52㎡", budget: 6800, district: "business", extras: ["elevator", "near_subway"], slogan: "中关村核心，宇宙中心的房租也是宇宙级的——但通勤值得。", floor: "9/18" },
+  { city: "beijing", name: "天通苑·地铁5号线 1204", type: "studio", size: "32㎡", budget: 2600, district: "metro", extras: ["near_subway", "elevator"], slogan: "亚洲最大社区，2600 在北京站稳脚跟——北漂第一站。", floor: "12/22" },
+  { city: "beijing", name: "回龙观·地铁13号线 802", type: "1b1l", size: "48㎡", budget: 3600, district: "metro", extras: ["near_subway", "elevator", "furnished"], slogan: "码农聚集地，13 号线直达西二旗——通勤 thirty 分钟。", floor: "8/18" },
+  { city: "beijing", name: "通州·果园环岛 606", type: "studio", size: "30㎡", budget: 1900, district: "suburb", extras: ["near_subway", "furnished"], slogan: "城市副中心，一千九的价格——北京也有温柔的一面。", floor: "6/16" },
+  { city: "beijing", name: "昌平·沙河高教园 302", type: "studio", size: "28㎡", budget: 1500, district: "university", extras: ["furnished", "pet"], slogan: "高教园区，学生党的价格，打工人的性价比。", floor: "3/9" },
+  { city: "beijing", name: "房山·良乡大学城 405", type: "1b1l", size: "45㎡", budget: 2100, district: "university", extras: ["balcony", "elevator"], slogan: "房山线上安个家，两千一在北京算得上传奇。", floor: "4/11" },
+  { city: "beijing", name: "大兴·旧宫 1003", type: "2b1l", size: "82㎡", budget: 4200, district: "suburb", extras: ["elevator", "parking"], slogan: "亦庄线旁两居室，一家人在北京的落脚点。", floor: "10/21" },
+  { city: "beijing", name: "朝阳公园旁·棕榈泉 2202", type: "3b2l", size: "145㎡", budget: 18000, district: "city_center", extras: ["elevator", "balcony", "parking", "furnished"], slogan: "豪宅区大平层，住进来才知道什么叫北京的天花板。", floor: "22/26" },
+  { city: "beijing", name: "亦庄·经济开发区 709", type: "2b1l", size: "88㎡", budget: 4500, district: "business", extras: ["elevator", "parking"], slogan: "经开区配套齐全，大厂环绕——搞钱和安居可以兼得。", floor: "7/18" },
+
+  // ===== 上海（市中心单间 4300+，外环外 1700-3200）=====
+  { city: "shanghai", name: "黄浦·人民广场旁 1906", type: "1b1l", size: "50㎡", budget: 7800, district: "city_center", extras: ["elevator", "near_subway", "furnished"], slogan: "人民广场旁，三条地铁交汇——上海的心脏为你跳动。", floor: "19/28" },
+  { city: "shanghai", name: "静安·静安寺旁老公房 502", type: "studio", size: "30㎡", budget: 4300, district: "city_center", extras: ["furnished"], slogan: "静安寺旁老公房，地段就是硬通货——贵有贵的道理。", floor: "5/6" },
+  { city: "shanghai", name: "浦东·陆家嘴江景公寓 3205", type: "apt", size: "55㎡", budget: 9500, district: "business", extras: ["elevator", "near_subway", "furnished"], slogan: "三十二层俯瞰黄浦江，三件套尽收眼底——魔都的排面。", floor: "32/38" },
+  { city: "shanghai", name: "徐家汇·交大旁 701", type: "1b1l", size: "46㎡", budget: 6000, district: "city_center", extras: ["elevator", "furnished"], slogan: "徐家汇商圈+交大学区，闹中取静的书香气。", floor: "7/18" },
+  { city: "shanghai", name: "地铁2号线·张江高科 1103", type: "studio", size: "35㎡", budget: 3200, district: "metro", extras: ["near_subway", "elevator", "furnished"], slogan: "张江科学城旁，3200 住进中国硅谷——程序员の家。", floor: "11/17" },
+  { city: "shanghai", name: "地铁9号线·七宝站旁 808", type: "1b1l", size: "52㎡", budget: 3900, district: "metro", extras: ["near_subway", "elevator", "balcony"], slogan: "七宝古镇旁，九号线直达徐家汇——老上海的烟火与新城的便利。", floor: "8/15" },
+  { city: "shanghai", name: "松江大学城·文汇路 402", type: "studio", size: "28㎡", budget: 1700, district: "university", extras: ["furnished", "pet"], slogan: "文汇路美食街旁，一千七的价格回到学生时代。", floor: "4/9" },
+  { city: "shanghai", name: "杨浦·五角场复旦旁 603", type: "1b1l", size: "44㎡", budget: 3400, district: "university", extras: ["balcony", "furnished"], slogan: "五角场商圈+复旦氛围，年轻人扎堆的活力地带。", floor: "6/12" },
+  { city: "shanghai", name: "嘉定·安亭汽车城 905", type: "2b1l", size: "85㎡", budget: 3300, district: "suburb", extras: ["elevator", "parking"], slogan: "安亭新城，3300 两居室——上海郊区也没那么贵。", floor: "9/18" },
+  { city: "shanghai", name: "闵行·莘庄地铁站旁 1306", type: "2b1l", size: "78㎡", budget: 4600, district: "metro", extras: ["near_subway", "elevator", "parking"], slogan: "莘庄枢纽，1 号线 5 号线双线，通勤上海的万能起点。", floor: "13/22" },
+  { city: "shanghai", name: "外滩·江景大平层 2601", type: "3b2l", size: "160㎡", budget: 22000, district: "city_center", extras: ["elevator", "balcony", "parking", "furnished"], slogan: "外滩江景大平层，浦江两岸灯火为你点亮——人生巅峰体验。", floor: "26/30" },
+  { city: "shanghai", name: "宝山·顾村公园旁 508", type: "2b1l", size: "80㎡", budget: 3200, district: "suburb", extras: ["elevator", "parking", "pet"], slogan: "樱花季的顾村公园就是你的后花园——3200 两居室带宠。", floor: "5/15" },
+
+  // ===== 广州（市中心单间 1900-2200，大学城 1200）=====
+  { city: "guangzhou", name: "越秀·北京路旁 702", type: "studio", size: "30㎡", budget: 2200, district: "city_center", extras: ["furnished", "near_subway"], slogan: "北京路步行街旁，早茶宵夜随时开吃——广式生活从这开始。", floor: "7/9" },
+  { city: "guangzhou", name: "天河·体育西公寓 1808", type: "apt", size: "42㎡", budget: 3600, district: "business", extras: ["elevator", "near_subway", "furnished"], slogan: "体育西站上盖，3 号线的拥挤换 CBD 的繁华——值。", floor: "18/30" },
+  { city: "guangzhou", name: "珠江新城·猎德 2203", type: "1b1l", size: "52㎡", budget: 5500, district: "business", extras: ["elevator", "near_subway", "furnished"], slogan: "猎德村改造区，小蛮腰就在窗外——广州的门面担当。", floor: "22/32" },
+  { city: "guangzhou", name: "地铁3号线·客村 604", type: "studio", size: "28㎡", budget: 1900, district: "metro", extras: ["near_subway", "elevator"], slogan: "客村双线换乘，琶洲上班的小伙伴看过来——1900 拿下。", floor: "6/12" },
+  { city: "guangzhou", name: "番禺·大学城北亭 305", type: "studio", size: "26㎡", budget: 1200, district: "university", extras: ["furnished", "near_subway"], slogan: "北亭村里一千二，十所大学任你蹭课——青春的价格。", floor: "3/7" },
+  { city: "guangzhou", name: "大学城·广大旁 506", type: "1b1l", size: "45㎡", budget: 2000, district: "university", extras: ["balcony", "elevator"], slogan: "广大正对面，操场图书馆随便蹭——学术自由近在咫尺。", floor: "5/11" },
+  { city: "guangzhou", name: "海珠·滨江东江景房 1502", type: "2b1l", size: "85㎡", budget: 4800, district: "city_center", extras: ["elevator", "balcony", "parking"], slogan: "滨江东望珠江，夜跑珠江长堤就是你的日常。", floor: "15/28" },
+  { city: "guangzhou", name: "荔湾·西关老宅小院", type: "1b1l", size: "48㎡", budget: 2100, district: "city_center", extras: ["pet", "balcony"], slogan: "西关大屋小天井，满洲窗下叹早茶——老广的灵魂居所。", floor: "1/3" },
+  { city: "guangzhou", name: "白云·嘉禾望岗 906", type: "2b1l", size: "80㎡", budget: 2800, district: "suburb", extras: ["near_subway", "elevator"], slogan: "嘉禾望岗枢纽站，2 号线 3 号线双线——通勤党福音。", floor: "9/16" },
+  { city: "guangzhou", name: "黄埔·科学城 1102", type: "2b1l", size: "88㎡", budget: 3200, district: "suburb", extras: ["elevator", "parking", "furnished"], slogan: "科学城产业园旁，3200 两居室——广州搞钱的性价比之选。", floor: "11/20" },
+  { city: "guangzhou", name: "天河·珠江别墅分租", type: "3b2l", size: "150㎡", budget: 9500, district: "city_center", extras: ["elevator", "balcony", "parking", "pet"], slogan: "别墅分租大空间，广州闹市里的桃花源。", floor: "2/3" },
+  { city: "guangzhou", name: "地铁5号线·车陂南 403", type: "1b1l", size: "42㎡", budget: 2300, district: "metro", extras: ["near_subway", "furnished"], slogan: "车陂南双线站，天河上班党的通勤神器。", floor: "4/9" },
+
+  // ===== 深圳（市中心单间 3200-3800，关外 1400-2200）=====
+  { city: "shenzhen", name: "福田·车公庙公寓 2508", type: "apt", size: "45㎡", budget: 5200, district: "business", extras: ["elevator", "near_subway", "furnished"], slogan: "车公庙 CBD，四线交汇——深圳搞钱人的中转站。", floor: "25/32" },
+  { city: "shenzhen", name: "南山·科技园旁 1106", type: "studio", size: "32㎡", budget: 3800, district: "business", extras: ["near_subway", "elevator", "furnished"], slogan: "科技园地铁口，大厂环伺——通勤五分钟，加班都积极。", floor: "11/24" },
+  { city: "shenzhen", name: "福田·华强北 602", type: "studio", size: "28㎡", budget: 3200, district: "city_center", extras: ["furnished", "near_subway"], slogan: "中国电子第一街旁，华强北的传奇从你的窗口看过去。", floor: "6/9" },
+  { city: "shenzhen", name: "地铁1号线·白石洲 305", type: "studio", size: "26㎡", budget: 2200, district: "metro", extras: ["near_subway"], slogan: "白石洲城中村，2200 住在深圳中心——打工人最后的倔强。", floor: "3/8" },
+  { city: "shenzhen", name: "深大旁·粤海门村 402", type: "1b1l", size: "42㎡", budget: 3600, district: "university", extras: ["balcony", "pet"], slogan: "深大旁边，图书馆食堂随便蹭——重返十八岁的感觉。", floor: "4/7" },
+  { city: "shenzhen", name: "大学城·哈工大深圳旁 505", type: "studio", size: "28㎡", budget: 1800, district: "university", extras: ["furnished", "near_subway"], slogan: "大学城旁一千八，深圳少有的温柔价位。", floor: "5/10" },
+  { city: "shenzhen", name: "龙华·深圳北站旁 1208", type: "1b1l", size: "48㎡", budget: 2900, district: "metro", extras: ["near_subway", "elevator", "furnished"], slogan: "高铁枢纽旁，回老家说走就走——深漂的退路也是路。", floor: "12/26" },
+  { city: "shenzhen", name: "宝安·西乡 903", type: "2b1l", size: "82㎡", budget: 3600, district: "suburb", extras: ["elevator", "parking"], slogan: "西乡地铁旁两居室，3600 在深圳算捡到宝。", floor: "9/18" },
+  { city: "shenzhen", name: "龙岗·大运新城 706", type: "2b1l", size: "85㎡", budget: 3200, district: "suburb", extras: ["elevator", "parking", "balcony"], slogan: "大运场馆旁，3200 两居室——龙岗的性价比无人能敌。", floor: "7/22" },
+  { city: "shenzhen", name: "南山·深圳湾 1802", type: "3b2l", size: "140㎡", budget: 15000, district: "city_center", extras: ["elevator", "balcony", "parking", "furnished"], slogan: "深圳湾十八层海景，对岸就是香港——湾区之巅。", floor: "18/28" },
+  { city: "shenzhen", name: "地铁11号线·碧海湾 508", type: "1b1l", size: "46㎡", budget: 2400, district: "metro", extras: ["near_subway", "elevator"], slogan: "11 号线快线直达福田，机场站旁——出差党的通勤神器。", floor: "5/16" },
+  { city: "shenzhen", name: "坪山·高新园东 409", type: "studio", size: "30㎡", budget: 1400, district: "suburb", extras: ["furnished", "parking"], slogan: "坪山新区一千四，深圳也有一千四的房子——别不信。", floor: "4/12" },
+
+  // ===== 杭州（市中心单间 3300，大学城 1400）=====
+  { city: "hangzhou", name: "上城·西湖边 602", type: "1b1l", size: "48㎡", budget: 5200, district: "city_center", extras: ["furnished", "elevator"], slogan: "西湖边安家，饭后散步断桥残雪——杭州人的浪漫。", floor: "6/7" },
+  { city: "hangzhou", name: "武林广场旁 1206", type: "studio", size: "30㎡", budget: 3300, district: "city_center", extras: ["near_subway", "furnished", "elevator"], slogan: "武林商圈核心，杭州最繁华的地方——夜生活从这里开始。", floor: "12/18" },
+  { city: "hangzhou", name: "未来科技城·阿里巴巴西溪园区旁 908", type: "apt", size: "45㎡", budget: 3600, district: "business", extras: ["elevator", "near_subway", "furnished"], slogan: "阿里园区步行可达，程序员浓度 99%——找对象都不愁同行。", floor: "9/22" },
+  { city: "hangzhou", name: "滨江·网易大厦旁 704", type: "1b1l", size: "46㎡", budget: 3900, district: "business", extras: ["near_subway", "elevator", "balcony"], slogan: "滨江互联网小镇，网易海康都在隔壁——搞钱氛围拉满。", floor: "7/18" },
+  { city: "hangzhou", name: "地铁1号线·彭埠 405", type: "studio", size: "28㎡", budget: 2100, district: "metro", extras: ["near_subway", "furnished"], slogan: "彭埠枢纽站，1 号线 4 号线双线——2100 通勤全杭州。", floor: "4/12" },
+  { city: "hangzhou", name: "余杭·仓前地铁站 606", type: "studio", size: "30㎡", budget: 2200, district: "metro", extras: ["near_subway", "elevator", "furnished"], slogan: "仓前站旁，5 号线直达未来科技城——通勤党的性价比之选。", floor: "6/15" },
+  { city: "hangzhou", name: "下沙大学城·福雷德广场 305", type: "studio", size: "27㎡", budget: 1400, district: "university", extras: ["furnished", "near_subway"], slogan: "下沙美食城旁，一千四回到学生时代——青春不散场。", floor: "3/9" },
+  { city: "hangzhou", name: "浙大紫金港旁 502", type: "1b1l", size: "44㎡", budget: 2500, district: "university", extras: ["balcony", "pet"], slogan: "浙大紫金港隔壁，学术氛围+杭州房价的天花板性价比。", floor: "5/8" },
+  { city: "hangzhou", name: "萧山·人民广场 1102", type: "2b1l", size: "85㎡", budget: 3500, district: "suburb", extras: ["elevator", "parking"], slogan: "萧山核心区，3500 两居室——亚运新城的踏实选择。", floor: "11/18" },
+  { city: "hangzhou", name: "临平·地铁9号线 806", type: "2b1l", size: "78㎡", budget: 2800, district: "suburb", extras: ["near_subway", "elevator"], slogan: "临平新城，9 号线直达钱江新城——2800 安家杭州。", floor: "8/16" },
+  { city: "hangzhou", name: "钱江新城·江景房 2202", type: "3b2l", size: "145㎡", budget: 12000, district: "city_center", extras: ["elevator", "balcony", "parking", "furnished"], slogan: "钱塘江畔大平层，灯光秀就在窗外——杭州的门面担当。", floor: "22/30" },
+  { city: "hangzhou", name: "西溪湿地旁·民宿风公寓", type: "apt", size: "50㎡", budget: 3200, district: "suburb", extras: ["furnished", "pet", "balcony"], slogan: "西溪湿地边，推窗见绿——住进来就懂什么叫人间天堂。", floor: "2/4" },
+];
+
+// 城市映射
+const CITY_LABELS = {
+  "fuzhou": "福州",
+  "xiamen": "厦门",
+  "hangzhou": "杭州",
+  "guangzhou": "广州",
+  "shenzhen": "深圳",
+  "beijing": "北京",
+  "shanghai": "上海"
+};
+
+// 区域映射
+const DISTRICT_LABELS = {
+  "city_center": "市中心",
+  "metro": "地铁口",
+  "suburb": "近郊",
+  "university": "大学城",
+  "business": "商务区"
+};
+
+const TYPE_LABELS = {
+  "studio": "单间",
+  "1b1l": "一室一厅",
+  "2b1l": "两室一厅",
+  "3b2l": "三室两厅",
+  "apt": "公寓"
+};
+
+const EXTRA_LABELS = {
+  "pet": "可养宠",
+  "balcony": "有阳台",
+  "furnished": "拎包入住",
+  "parking": "有车位",
+  "elevator": "电梯房",
+  "near_subway": "地铁5分钟"
+};
+
+// 标签选择
+document.querySelectorAll('.tag-group').forEach(group => {
+  group.addEventListener('click', e => {
+    const btn = e.target.closest('.tag-btn');
+    if (btn) btn.classList.toggle('selected');
+  });
+});
+
+function getSelectedTags(groupId) {
+  const group = document.getElementById(groupId);
+  return [...group.querySelectorAll('.tag-btn.selected')].map(btn => btn.dataset.value);
+}
+
+// 提交
+document.getElementById('submitBtn').addEventListener('click', () => {
+  const city = document.getElementById('city').value;
+  const budget = parseInt(document.getElementById('budget').value);
+  const types = getSelectedTags('typeTags');
+  const district = document.getElementById('district').value;
+  const extras = getSelectedTags('extraTags');
+
+  if (!city) {
+    alert('⚡ 请选城市！总得知道你在哪座城闯荡！');
+    return;
+  }
+  if (!budget) {
+    alert('⚡ 请选预算！别光看着，选！');
+    return;
+  }
+  if (types.length === 0) {
+    alert('⚡ 请选择户型！总得有个住法！');
+    return;
+  }
+
+  // 筛选：城市 → 预算 → 户型 → 区域
+  let results = HOUSES.filter(h => {
+    if (h.city !== city) return false;
+    if (h.budget > budget) return false;
+    if (types.length > 0 && !types.includes(h.type)) return false;
+    if (district && h.district !== district) return false;
+    return true;
+  });
+
+  // 额外需求过滤（软过滤，不满足也展示但降权）
+  results.sort((a, b) => {
+    const aScore = extras.filter(e => a.extras.includes(e)).length;
+    const bScore = extras.filter(e => b.extras.includes(e)).length;
+    if (bScore !== aScore) return bScore - aScore;
+    return a.budget - b.budget;
+  });
+
+  // 取前 5 条
+  results = results.slice(0, 5);
+
+  const resultsSection = document.getElementById('results');
+  const cardsDiv = document.getElementById('resultCards');
+  const subDiv = document.getElementById('resultSub');
+
+  // 构建摘要
+  const typeStr = types.map(t => TYPE_LABELS[t]).join('、');
+  const districtStr = district ? DISTRICT_LABELS[district] : '不限';
+  const budgetStr = budget >= 10000 ? `${budget/10000}万` : `${budget}元/月`;
+  subDiv.textContent = `${CITY_LABELS[city]} · 预算 ${budgetStr} · ${typeStr} · ${districtStr} · ${extras.length} 项要求`;
+
+  if (results.length === 0) {
+    // 给出该条件下最低参考价，告诉用户差多少（先查同区域，查不到就放宽到全市）
+    let fallback = HOUSES.filter(h => h.city === city && types.includes(h.type) && (!district || h.district === district));
+    if (fallback.length === 0) fallback = HOUSES.filter(h => h.city === city && types.includes(h.type));
+    let hintHtml = '<div style="opacity: 0.7; margin-top: 10px; font-size: 1.1rem;">适当降低要求，好房子不挑人——但人得挑好房子。</div>';
+    if (fallback.length > 0) {
+      const minPrice = Math.min(...fallback.map(h => h.budget));
+      hintHtml = `<div style="opacity: 0.7; margin-top: 10px; font-size: 1.1rem;">${CITY_LABELS[city]}这个区域${typeStr}最低月租 <b style="color: var(--red);">¥${minPrice.toLocaleString()}</b>，预算加到这个数就有房！</div>`;
+    }
+    document.getElementById('resultTitle').textContent = `—— ${CITY_LABELS[city]} · 查无此房 ——`;
+    cardsDiv.innerHTML = `
+      <div class="result-card" style="border-color: var(--dark); text-align: center; padding: 50px 30px;">
+        <div style="font-size: 3rem; margin-bottom: 20px;">📭</div>
+        <div class="card-title" style="font-size: 1.5rem;">条件太苛刻了同志！</div>
+        ${hintHtml}
+      </div>`;
+  } else {
+    document.getElementById('resultTitle').textContent = `—— ${CITY_LABELS[city]} · 查到 ${results.length} 套好房 ——`;
+    cardsDiv.innerHTML = results.map((h, i) => {
+      const matchedExtras = h.extras.filter(e => extras.includes(e));
+      const extraText = matchedExtras.length > 0 
+        ? matchedExtras.map(e => EXTRA_LABELS[e]).join(' · ')
+        : h.extras.map(e => EXTRA_LABELS[e]).join(' · ');
+      
+      return `
+        <div class="result-card" data-rank="${i + 1}">
+          <div class="card-title">${h.name}</div>
+          <div class="card-info">
+            <div class="info-item">
+              <div class="info-label">户型</div>
+              <div class="info-value">${TYPE_LABELS[h.type]}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">面积</div>
+              <div class="info-value">${h.size}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">月租</div>
+              <div class="info-value">¥${h.budget.toLocaleString()}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">楼层</div>
+              <div class="info-value">${h.floor}</div>
+            </div>
+          </div>
+          <div style="margin-bottom: 10px; font-size: 0.95rem; font-weight: 700; color: var(--dark); opacity: 0.8;">
+            ✦ ${DISTRICT_LABELS[h.district]} · ${extraText}
+          </div>
+          <div class="card-slogan">${h.slogan}</div>
+        </div>`;
+    }).join('');
+  }
+
+  resultsSection.classList.add('active');
+  resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+</script>
+
+</body>
+</html>
